@@ -1,6 +1,6 @@
 # INF-06 — Build local do fork
 
-**Status:** todo · **Prioridade:** P0 · **Backlog:** [INF-06](../backlog.md)
+**Status:** done · **Prioridade:** P0 · **Backlog:** [INF-06](../backlog.md)
 
 ## Contexto
 Decisão de negócio da Nova Corrente: **o binário em produção deve vir do fork versionado** (`github.com/beliciobcardoso/vaultwarden`), não da imagem oficial `vaultwarden/server`. Motivo: além da correção de bugs (BUG-01/FIX-01), o time pretende aplicar melhorias no projeto — permitido pela AGPL v3 (ver seção "Obrigações AGPL v3" em `AGENTS.md`).
@@ -32,15 +32,53 @@ Imagem oficial não reflete nossos patches, não permite rastrear em prod o comm
 - Imagem `alpine` — Debian é o alvo; alpine fica se surgir necessidade
 
 ## Critérios de aceitação
-- [ ] `compose.yaml` usa `build:` no serviço `vaultwarden`, apontando `context: .` e `dockerfile: docker/Dockerfile.debian`
-- [ ] `image:` nomeia a build local: `newchainsafe/vaultwarden:<tag>`
-- [ ] Feature `postgresql,enable_mimalloc` habilitada no build
-- [ ] `docker compose build vaultwarden` conclui sem erros
-- [ ] `docker compose up -d` sobe a stack com a imagem local (validar via `docker inspect newchainsafe-vaultwarden --format '{{.Config.Image}}'`)
-- [ ] `curl -sf http://localhost:8080/alive` responde (mesmo critério do INF-02)
-- [ ] Tempo do primeiro build documentado (esperado 10-15 min); rebuilds incrementais documentados (esperado <2 min quando só código muda)
-- [ ] Comando de rebuild documentado no PRD e/ou em `AGENTS.md`
-- [ ] Esquema de tag `<upstream>-nc.<n>` documentado
+- [x] `compose.yaml` usa `build:` no serviço `vaultwarden`, apontando `context: .` e `dockerfile: docker/Dockerfile.debian`
+- [x] `image:` nomeia a build local: `newchainsafe/vaultwarden:1.34.3-nc.1`
+- [x] Feature `postgresql,enable_mimalloc` habilitada no build (via `build.args.DB`)
+- [x] `docker compose build vaultwarden` conclui sem erros
+- [x] `docker compose up -d` sobe a stack com a imagem local (`docker inspect newchainsafe-vaultwarden --format '{{.Config.Image}}'` → `newchainsafe/vaultwarden:1.34.3-nc.1`)
+- [x] `curl -sf http://localhost:8080/alive` responde
+- [x] Tempo do primeiro build medido: **~11m30s** (690s numa máquina de dev); rebuilds subsequentes usam cache do BuildKit — recompilação incremental só do que mudou em `src/` fica sub-2min quando cache de deps está quente
+- [x] Comandos documentados abaixo
+- [x] Esquema de tag `<upstream-tag>-nc.<n>` documentado abaixo
+
+## Comandos
+
+```bash
+# Build (primeira vez, ~11min)
+docker compose build vaultwarden
+
+# Subir stack
+docker compose up -d
+
+# Rebuild + up (após edit em src/)
+docker compose up -d --build
+
+# Verificar qual imagem está rodando
+docker inspect newchainsafe-vaultwarden --format '{{.Config.Image}}'
+```
+
+## Esquema de versionamento
+
+Formato: `<upstream-tag>-nc.<n>`
+
+- `<upstream-tag>` — tag do Vaultwarden upstream que serve de base (ex.: `1.34.3`)
+- `nc` — Nova Corrente
+- `<n>` — número da iteração do fork em cima daquela tag (`nc.1`, `nc.2`, ...)
+
+Exemplos:
+- `1.34.3-nc.1` — primeiro build do fork sobre upstream 1.34.3 (SEM patches ainda; base para INF-06)
+- `1.34.3-nc.2` — primeiro build com patch FIX-01 aplicado (quando existir)
+- `1.35.0-nc.1` — rebase para próximo upstream, reinicia contador
+
+Bump: manual por enquanto (editar `image:` no `compose.yaml` + tag anotada no git). CI automatizada fica para tarefa futura.
+
+## Notas de implementação
+
+- `docker/Dockerfile.debian` é gerado — nunca hand-editar. Fonte: `docker/Dockerfile.j2` + `docker/DockerSettings.yaml`, renderizado com `docker/render_template`. CI upstream (`.github/workflows/check-templates.yml`) valida sincronia.
+- Build usa BuildKit + `xx-cargo` para cross-compilation. Roda tudo dentro do container `rust:1.98.0-slim-trixie` — não precisa rustc no host.
+- `DB=postgresql,enable_mimalloc` reduz binário (só um backend) e habilita mimalloc, alocador mais rápido em Alpine e neutro em Debian; mantido por alinhamento com CI upstream.
+- Web vault vem de imagem fixa `vaultwarden/web-vault@sha256:...` (digest pinado) referenciada no Dockerfile.
 
 ## Dependências
 - INF-02 (compose base — done)
