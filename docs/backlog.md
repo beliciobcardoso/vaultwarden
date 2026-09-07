@@ -52,7 +52,7 @@
 | POC-01 | Subir stack local e autenticar via Azure AD (SSO padrão) | P0 | done |
 | POC-02 | Validar restrição de domínio `novacorrente.ind.br` | P0 | done |
 | POC-03 | Validar MFA step-up (Azure MFA na visualização de segredo, não só login) | P0 | done |
-| POC-04 | Validar criptografia E2E (servidor/DB nunca veem texto plano) | P0 | todo |
+| POC-04 | Validar criptografia E2E (servidor/DB nunca veem texto plano) | P0 | done |
 | POC-05 | Testar extensão de navegador Bitwarden conectada ao Vaultwarden local | P1 | todo |
 | POC-06 | Testar cliente desktop Bitwarden conectado ao Vaultwarden local | P1 | todo |
 | POC-07 | Definir e testar política de grupos e compartilhamento | P1 | todo |
