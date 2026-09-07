@@ -1,6 +1,6 @@
 # INF-03 — Configurar variáveis de ambiente (`.env`)
 
-**Status:** todo · **Prioridade:** P0 · **Backlog:** [INF-03](../backlog.md)
+**Status:** done · **Prioridade:** P0 · **Backlog:** [INF-03](../backlog.md)
 
 ## Contexto
 Vaultwarden é 100% configurado via env vars (ver `src/config.rs` e `.env.template` na raiz — ~88KB de opções). PoC precisa de `.env` local com valores da Nova Corrente, sem versionar segredos.
@@ -21,12 +21,17 @@ Um `.env.example` versionado (chaves + valores fictícios/placeholders) + `.env`
 **Fora:** vault de segredos (Vault/Doppler/1Password) — PoC roda com `.env` local mesmo.
 
 ## Critérios de aceitação
-- [ ] `.env.example` versionado, sem segredos reais
-- [ ] `.env` local existe, funcional, ignorado pelo git (`git status` não mostra)
-- [ ] Todas as vars do INF-02 e INF-05 documentadas em `.env.example`
-- [ ] `SIGNUPS_ALLOWED=false` explícito (evita cadastro fora do domínio corporativo)
-- [ ] Comentário no `.env.example` explica como gerar `ADMIN_TOKEN` seguro
-- [ ] Vaultwarden sobe consumindo `.env` (via `env_file` no compose)
+- [x] `.env.example` versionado, sem segredos reais
+- [x] `.env` local existe, funcional, ignorado pelo git (`git check-ignore .env` → `.gitignore:13`)
+- [x] Todas as vars do INF-02 e INF-05 documentadas em `.env.example`
+- [x] `SIGNUPS_ALLOWED=false` explícito (evita cadastro fora do domínio corporativo)
+- [x] Comentário no `.env.example` explica como gerar `ADMIN_TOKEN` seguro (Argon2id via `docker compose exec vaultwarden /vaultwarden hash`)
+- [x] Vaultwarden sobe consumindo `.env` (via `env_file` no compose — validado em INF-02/INF-06)
+
+## Notas de implementação
+- `.env.example` estruturado por seções: PostgreSQL, domínio/acesso, logging, ADMIN_TOKEN, SMTP, SSO Azure AD, Push.
+- `INVITATIONS_ALLOWED`, `EMERGENCY_ACCESS_ALLOWED`, `SENDS_ALLOWED`, `PUSH_*` deixados comentados — habilitar por decisão explícita da Nova Corrente após POC-07/POC-08.
+- `SSO_ONLY=false` reforçado com nota sobre BUG-01.
 
 ## Dependências
 - INF-02 (compose consome o `.env`)
