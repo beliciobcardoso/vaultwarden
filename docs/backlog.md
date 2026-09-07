@@ -49,7 +49,7 @@
 
 | ID | Tarefa | Prioridade | Status |
 |----|--------|-----------|--------|
-| POC-01 | Subir stack local e autenticar via Azure AD (SSO padrão) | P0 | todo |
+| POC-01 | Subir stack local e autenticar via Azure AD (SSO padrão) | P0 | done |
 | POC-02 | Validar restrição de domínio `novacorrente.ind.br` | P0 | todo |
 | POC-03 | Validar MFA step-up (Azure MFA na visualização de segredo, não só login) | P0 | todo |
 | POC-04 | Validar criptografia E2E (servidor/DB nunca veem texto plano) | P0 | todo |
