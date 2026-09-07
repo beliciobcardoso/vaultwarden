@@ -115,6 +115,18 @@ Estas regras são inegociáveis. Antes de qualquer ação, verifique se ela se e
    - PRD é a fonte da verdade da tarefa; escopo fora do PRD não entra sem atualizar o PRD antes.
 5. **Toda tarefa concluída atualiza o PRD correspondente** marcando os itens de aceitação como concluídos (checkbox `[x]`) e, se aplicável, atualiza o status no `docs/backlog.md` (`todo` → `done`). Sem essa atualização a tarefa não é considerada concluída.
 
+## Obrigações AGPL v3 (licença do Vaultwarden)
+
+O fork é distribuído sob AGPL v3 (mesma licença do upstream). Isso permite modificar, redistribuir e usar comercialmente, **inclusive internamente**, mas impõe as seguintes obrigações — **inegociáveis**:
+
+1. **Manter licença AGPL v3 nos arquivos modificados.** Nunca relicenciar código Vaultwarden ou trechos derivados. Se um arquivo tem cabeçalho de licença, preservar; se não tem, o `LICENSE.txt` da raiz cobre.
+2. **Preservar copyright do autor original** (Daniel García e demais contribuidores upstream). Nossos commits acrescentam autoria; não substituem.
+3. **Documentar alterações.** Commits e changelog já cobrem. Toda modificação em `src/` deve estar em branch dedicada (regra 3 acima), rastreável no `git log`.
+4. **Se expor o serviço pela rede** (mesmo em rede interna corporativa) → **obrigatório disponibilizar o código-fonte modificado aos usuários do serviço**. O fork público `github.com/beliciobcardoso/vaultwarden` cumpre esse requisito; basta:
+   - manter o fork sincronizado com o que roda em produção (tag ou commit hash publicado, imagem versionada);
+   - linkar o repositório do fork no rodapé do web vault e/ou na página `/admin`.
+5. **"Bitwarden" é trademark.** Não usar o nome, logotipo ou marca "Bitwarden" em UI, comunicação, e-mails transacionais ou documentação do produto interno. Usar "NewChainSafe" (nome do projeto) ou "Vaultwarden" onde couber referência ao software.
+
 ## Working on This Fork
 
 1. Always branch **from `developer`**, not `main`. PRs internal to the fork target `developer`.
