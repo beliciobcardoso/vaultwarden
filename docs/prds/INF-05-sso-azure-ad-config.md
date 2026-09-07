@@ -1,6 +1,6 @@
 # INF-05 — Configurar SSO Azure AD (OIDC) modo padrão
 
-**Status:** todo · **Prioridade:** P0 · **Backlog:** [INF-05](../backlog.md)
+**Status:** done · **Prioridade:** P0 · **Backlog:** [INF-05](../backlog.md)
 
 ## Contexto
 Com App Registration pronto (INF-04) e stack local rodando (INF-02/INF-03), configurar o Vaultwarden para autenticar via Azure AD **em modo SSO padrão** — **jamais** `SSO_ONLY` (bloqueado por BUG-01).
@@ -27,12 +27,12 @@ Login via Azure AD funcional em modo SSO padrão (usuário pode escolher SSO ou 
 - Group/role claims (fica em POC-07/08)
 
 ## Critérios de aceitação
-- [ ] `.env` local com todas as vars `SSO_*` preenchidas e comentadas
-- [ ] `SSO_ONLY=false` presente e explícito
-- [ ] Botão "Log in with SSO" aparece na tela de login do web vault
-- [ ] Login completo via Azure AD funciona (redirect ida → Azure → callback → sessão)
-- [ ] Log do Vaultwarden mostra fluxo SSO sem warnings/erros
-- [ ] Teste com usuário fora do domínio: login concluído, mas fica pendente para POC-02 aplicar restrição
+- [x] `.env` local com todas as vars `SSO_*` preenchidas e comentadas
+- [x] `SSO_ONLY=false` presente e explícito
+- [x] Botão "Log in with SSO" aparece na tela de login do web vault
+- [x] Login completo via Azure AD funciona (redirect ida → Azure → callback → sessão)
+- [x] Log do Vaultwarden mostra fluxo SSO sem warnings/erros
+- [x] Teste com usuário fora do domínio: login concluído, mas fica pendente para POC-02 aplicar restrição
 
 ## Dependências
 - INF-02, INF-03 (stack + env)
@@ -42,6 +42,11 @@ Login via Azure AD funcional em modo SSO padrão (usuário pode escolher SSO ou 
 - **Ativar `SSO_ONLY` por engano** → variável explícita `SSO_ONLY=false` no `.env`, comentário destacado citando BUG-01.
 - **Client Secret expirar** → prazo documentado em INF-04, alerta manual.
 - **Callback URI divergente** → validar contra `src/sso.rs` antes de cadastrar.
+
+## Notas de implementação
+- `SSO_ALLOW_UNKNOWN_EMAIL_VERIFICATION=true` obrigatório: Azure AD não emite claim `email_verified`, sem essa flag o Vaultwarden bloqueia login com erro "Your provider does not send email verified status".
+- HTTPS obrigatório no `DOMAIN` (cliente Bitwarden Web recusa `http://` em fluxo SSO) — desbloqueado via INF-07 (ngrok).
+- Login end-to-end validado com `belicio.cardoso@novacorrente.ind.br` no túnel ngrok.
 
 ## Referências
 - INF-04 (App Registration)
