@@ -30,7 +30,7 @@
 | INF-03 | Configurar variáveis de ambiente (`.env`) — sem segredos versionados | P0 | todo |
 | INF-04 | Registrar aplicação OIDC no Azure AD (tenant de teste) | P0 | todo |
 | INF-05 | Configurar SSO Azure AD (OIDC) modo padrão — **NÃO** `SSO_ONLY` | P0 | todo |
-| INF-06 | Build local do fork (compose usa `docker/Dockerfile.debian`, não imagem oficial) | P0 | todo |
+| INF-06 | Build local do fork (compose usa `docker/Dockerfile.debian`, não imagem oficial) | P0 | done |
 
 ---
 
