@@ -56,7 +56,7 @@
 | POC-04 | Validar criptografia E2E (servidor/DB nunca veem texto plano) | P0 | done |
 | POC-05 | Testar extensão de navegador Bitwarden conectada ao Vaultwarden local | P1 | done |
 | POC-06 | Testar cliente desktop Bitwarden conectado ao Vaultwarden local | P1 | done |
-| POC-07 | Definir e testar política de grupos e compartilhamento | P1 | todo |
+| POC-07 | Definir e testar política de grupos e compartilhamento | P1 | done |
 | POC-08 | Validar controle granular de permissão por grupo (leitura/escrita) | P2 | todo |
 
 ---
